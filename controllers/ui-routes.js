@@ -4,34 +4,27 @@ const { Post, User, Comment } = require('../models');
 
 router.use('/dashboard', dashboardRoutes);
 
+// HOMEPAGE
 router.get('/', (req, res) => {
   Post.findAll({
-    attributes: [
-      'post_title',
-      'post_body',
-    ],
     include: [
       {
-        model: Comment,
-        attributes: ['comment_text'],
-        include: {
-          model: User,
-          attributes: ['username']
-        }
+        model: User
       },
       {
-        model: User,
-        attributes: ['username']
+        model: Comment,
+        include: {
+          model: User
+        }
       }
     ]
   })
     .then((results) => {
-      console.log(results);
-      // const posts = results.map(post => post.get({ plain: true }));
-      // res.render('homepage', {
-      //   posts: posts,
-      //   loggedIn: req.session.loggedIn
-      // });
+      const posts = results.map(post => post.get({ plain: true }));
+      res.render('homepage', {
+        posts: posts,
+        username: req.session.username
+      });
     })
     .catch((err) => {
       console.log(err);
@@ -39,8 +32,9 @@ router.get('/', (req, res) => {
     });
 });
 
+// '/login'
 router.get('/login', (req, res) => {
-  if (req.session.loggedIn) {
+  if (req.session.userId) {
     res.redirect('/');
     return;
   }
@@ -48,27 +42,21 @@ router.get('/login', (req, res) => {
   res.render('login');
 });
 
+// '/post/:id'
 router.get('/post/:id', (req, res) => {
   Post.findOne({
     where: {
       id: req.params.id
     },
-    attributes: [
-      'post_title',
-      'post_body'
-    ],
     include: [
       {
-        model: Comment,
-        attributes: ['comment_text'],
-        include: {
-          model: User,
-          attributes: ['username']
-        }
+        model: User
       },
       {
-        model: User,
-        attributes: ['username']
+        model: Comment,
+        include: {
+          model: User
+        }
       }
     ]
   })
@@ -78,12 +66,11 @@ router.get('/post/:id', (req, res) => {
         return;
       }
 
-      // const post = results.get({ plain: true });
-
-      // res.render('single-post', {
-      //   post,
-      //   loggedIn: req.session.loggedIn
-      // });
+      const post = results.get({ plain: true });
+      res.render('single-post', {
+        post,
+        username: req.session.username
+      });
     })
     .catch((err) => {
       console.log(err);

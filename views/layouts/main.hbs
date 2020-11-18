@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pom Tech Blog</title>
+  <title>Blog</title>
   <link rel="stylesheet" href="/stylesheets/style.css">
 </head>
 
@@ -12,13 +12,13 @@
   <div class="wrapper">
     <header>
       <h1>
-        <a href="/">Pom Tech Blog</a>
+        <a href="/">Blog</a>
       </h1>
       <nav>
         <nav>
-          {{#if loggedIn}}
-          <a href="/dashboard">dashboard</a>
-          <button id="logout" class="btn-no-style">logout</button>
+          {{#if username}}
+          <a href="/dashboard">Dashboard</a>
+          <button id="logout" class="btn-no-style">Logout {{ username }}</button>
           {{else}}
           <a href="/login">login</a>
           {{/if}}
@@ -29,11 +29,11 @@
       {{{ body }}}
     </main>
     <footer>
-      Au revoir!
+      Thanks for visiting!
     </footer>
   </div>
 
-  {{#if loggedIn}}
+  {{#if username}}
   <script src="/javascript/logout.js"></script>
   {{/if}}
 

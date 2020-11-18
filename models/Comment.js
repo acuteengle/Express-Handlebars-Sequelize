@@ -4,52 +4,47 @@ const sequelize = require('../config/connection');
 class Comment extends Model { }
 
 Comment.init(
-    {
-        id: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            primaryKey: true,
-            validate: {
-                isNumeric: true
-            }
-        },
-        comment_text: {
-            type: DataTypes.STRING,
-            allowNullL: false,
-        },
-        post_id: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            references: {
-                model: 'post',
-                key: 'id'
-            },
-            validate: {
-                isNumeric: true
-            },
-        },
-        user_id: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            references: {
-                model: 'user',
-                key: 'id'
-            },
-            validate: {
-                isNumeric: true
-            },
-        }
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      unique: true,
+      autoIncrement: true,
+      primaryKey: true
     },
-    {
-        sequelize
+    comment_text: {
+      type: DataTypes.TEXT,
+      allowNullL: false,
+    },
+    post_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'posts',
+        key: 'id'
+      },
+      validate: {
+        isNumeric: true
+      },
+    },
+    user_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'users',
+        key: 'id'
+      },
+      validate: {
+        isNumeric: true
+      },
     }
-
-    // username: {
-    //     type: DataTypes.INTEGER,
-    //     allowNull: false,
-    //     references: {
-    //         model: 'user',
-    //         key: 'name',
+  },
+  {
+    sequelize,
+    freezeTableName: true,
+    underscored: true,
+    modelName: 'comments'
+  }
 );
 
 module.exports = Comment;

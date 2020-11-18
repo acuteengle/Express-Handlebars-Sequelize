@@ -2,31 +2,30 @@ const router = require('express').Router();
 const withAuth = require('../utils/auth');
 const { Post, User, Comment } = require('../models');
 
+// '/dashboard'
 router.get('/', withAuth, (req, res) => {
   Post.findAll({
-    attributes: [
-      'post_title',
-      'post_body',
-    ],
+    where: {
+      user_id: req.session.userId
+    },
     include: [
       {
-        model: Comment,
-        attributes: ['comment_text'],
-        include: {
-          model: User,
-          attributes: ['username']
-        }
+        model: User
       },
       {
-        model: User,
-        attributes: ['username']
+        model: Comment,
+        include: {
+          model: User
+        }
       }
     ]
   })
     .then((results) => {
-      // serialize data before passing to template
       const posts = results.map(post => post.get({ plain: true }));
-      res.render('dashboard', { posts, loggedIn: true });
+      res.render('dashboard', {
+        posts,
+        username: req.session.username
+      });
     })
     .catch((err) => {
       console.log(err);
@@ -34,28 +33,23 @@ router.get('/', withAuth, (req, res) => {
     });
 });
 
+// '/dashboard/edit/:id'
 router.get('/edit/:id', withAuth, (req, res) => {
   Post.findOne({
     where: {
       id: req.params.id
     },
-    attributes: [
-      'post_title',
-      'post_body',
-    ],
     include: [
       {
-        model: Comment,
-        attributes: ['comment_text'],
-        include: {
-          model: User,
-          attributes: ['username']
-        }
+        model: User
       },
       {
-        model: User,
-        attributes: ['username']
-      }
+        model: Comment,
+        include: {
+          model: User
+        }
+      },
+
     ]
   })
     .then((results) => {
@@ -64,12 +58,12 @@ router.get('/edit/:id', withAuth, (req, res) => {
         return;
       }
 
-      // const post = results.get({ plain: true });
+      const post = results.get({ plain: true });
 
-      // res.render('edit-post', {
-      //   post,
-      //   loggedIn: req.session.loggedIn
-      // });
+      res.render('edit-post', {
+        post,
+        username: req.session.username
+      });
     })
     .catch((err) => {
       console.log(err);

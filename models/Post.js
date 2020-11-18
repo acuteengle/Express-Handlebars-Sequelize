@@ -8,17 +8,16 @@ Post.init(
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      primaryKey: true,
-      validate: {
-        isNumeric: true
-      }
+      unique: true,
+      autoIncrement: true,
+      primaryKey: true
     },
     post_title: {
       type: DataTypes.STRING,
       allowNull: false
     },
     post_body: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: false
     },
     user_id: {
@@ -28,13 +27,16 @@ Post.init(
         isNumeric: true
       },
       references: {
-        model: 'user',
+        model: 'users',
         key: 'id'
       }
     },
   },
   {
-    sequelize
+    sequelize,
+    freezeTableName: true,
+    underscored: true,
+    modelName: 'posts'
   }
 );
 
