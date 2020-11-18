@@ -1,31 +1,25 @@
 async function commentFormHandler(event) {
     event.preventDefault();
 
-    const post_body = document.querySelector('textarea[name="comment-text"]').value.trim();
+    const comment_text = document.querySelector('#comment-text').value.trim();
+    const path = window.location.toString();
+    const post_id = path.substring(path.lastIndexOf('/') + 1)
 
-    const post_title = window.location.toString().split('/')[
-        window.location.toString().split('/').length - 1
-    ];
-
-    if (post_title) {
-        const response = await fetch('/api/comment', {
-            method: 'POST',
-            body: JSON.stringify({
-
-                post_title,
-                post_body
-
-            }),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-
-        if (response.ok) {
-            document.location.reload();
-        } else {
-            alert(response.statusText);
+    const response = await fetch('/api/comment', {
+        method: 'POST',
+        body: JSON.stringify({
+            comment_text,
+            post_id
+        }),
+        headers: {
+            'Content-Type': 'application/json'
         }
+    });
+
+    if (response.ok) {
+        document.location.reload();
+    } else {
+        alert(response.statusText);
     }
 }
 

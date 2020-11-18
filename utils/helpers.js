@@ -1,7 +1,7 @@
 module.exports = {
   format_date: (date) => {
     // https://flaviocopes.com/how-to-format-date-javascript/
-    return date.toDateString();
+    return date.toDateString() + ", " + date.toLocaleTimeString();
   },
   format_plural: (word, amount) => {
     if (amount !== 1) {
