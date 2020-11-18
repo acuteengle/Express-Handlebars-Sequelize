@@ -17,6 +17,9 @@ router.get('/', (req, res) => {
           model: User
         }
       }
+    ],
+    order: [
+      ['id', 'DESC']
     ]
   })
     .then((results) => {
